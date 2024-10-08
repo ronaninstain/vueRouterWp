@@ -1,0 +1,43 @@
+<?php
+/**
+ * Plugin Name: WordPress Vue Router
+ * Author: Shoive Hossain
+ * Version: 1.0
+ * Description: A demo of using Vue and Vue Router in WordPress.
+ */
+
+function func_load_vuescripts() {
+    // Register Vue.js
+    wp_register_script('wpvue_vuejs', 'https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js', [], null, true);
+    
+    // Register Vue Router (corrected link)
+    wp_register_script('wpvue_router', 'https://unpkg.com/vue-router@3/dist/vue-router.js', ['wpvue_vuejs'], null, true);
+
+    // Register custom Vue code
+    wp_register_script('my_vuecode', plugin_dir_url(__FILE__) . 'vuecode.js', ['wpvue_vuejs', 'wpvue_router'], null, true);
+    
+    // Localize script to pass REST API details
+    wp_localize_script('my_vuecode', 'wpApiSettings', [
+        'root'  => esc_url_raw(rest_url()),
+        'nonce' => wp_create_nonce('wp_rest')
+    ]);
+
+    // Enqueue scripts
+    wp_enqueue_script('wpvue_vuejs');
+    wp_enqueue_script('wpvue_router');
+    wp_enqueue_script('my_vuecode');
+}
+add_action('wp_enqueue_scripts', 'func_load_vuescripts');
+
+// Shortcode to display the Vue app
+function func_wp_vue() {
+    return "
+    <div id='divWpVue'>
+        <nav>
+            <router-link to='/'>Blog Titles</router-link> |
+            <router-link to='/contents'>Blog Contents</router-link>
+        </nav>
+        <router-view></router-view>
+    </div>";
+}
+add_shortcode('wpvue', 'func_wp_vue');
