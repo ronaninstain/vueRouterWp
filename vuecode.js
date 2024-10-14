@@ -201,15 +201,22 @@ const BlogContents = {
   },
 };
 
+// Define the Course Control component
+const CourseControl = {
+  template: `<div>Hello from course control centre</div>`,
+};
+
 // Define the routes
 const routes = [
   { path: "/", component: BlogTitles },
   { path: "/contents", component: BlogContents },
   { path: "/offerForm", component: offerForms },
+  { path: '/course-control', component: CourseControl }
 ];
 
 // Create the Vue Router instance
 const router = new VueRouter({
+  mode: "hash",
   routes, // short for `routes: routes`
 });
 

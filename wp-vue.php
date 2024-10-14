@@ -8,22 +8,29 @@
  */
 
 // Add a new admin menu item
-function func_wp_vue_admin_menu()
-{
+add_action('admin_menu', 'wp_vue_add_admin_menu');
+
+function wp_vue_add_admin_menu() {
     add_menu_page(
-        'Vue Function Controls',     // Page title
-        'Vue Function Controls',     // Menu title
-        'manage_options',            // Capability
-        'wp-vue-admin',              // Menu slug
-        'func_wp_vue_admin_page',    // Function to display the admin page
-        'dashicons-admin-site',      // Icon
-        6                            // Position
+        'Vue Function Control', // Page title
+        'Vue Control', // Menu title
+        'manage_options', // Capability
+        'wp-vue-admin', // Menu slug
+        'wp_vue_render_app' // Function to display the Vue app
+    );
+    
+    add_submenu_page(
+        'wp-vue-admin', // Parent slug
+        'Course Control', // Page title
+        'Course Control', // Submenu title
+        'manage_options', // Capability
+        'admin.php?page=wp-vue-admin#/course-control', // Submenu slug with Vue route
+        null // No need to define a function as Vue will handle this
     );
 }
-add_action('admin_menu', 'func_wp_vue_admin_menu');
 
 // Function to display the admin page
-function func_wp_vue_admin_page()
+function wp_vue_render_app()
 {
     echo "
     <div id='divWpVue' class='p-8 bg-gray-100 min-h-screen'>
@@ -62,7 +69,7 @@ function func_wp_vue_admin_page()
 function func_load_vuescripts($hook)
 {
     // Load scripts only on the Vue admin page
-    if ($hook !== 'toplevel_page_wp-vue-admin') {
+    if ($hook !== 'toplevel_page_wp-vue-admin' && $hook !== 'wp-vue_page_wp-vue-course-control') {
         return;
     }
 
